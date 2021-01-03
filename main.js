@@ -12,13 +12,13 @@ class Block {
     this.timestamp = timestamp
     this.transactions = transactions
     this.previousHash = previousHash
-    this.hash = this.calculateHash()
     this.nonce = 0
+    this.hash = this.calculateHash()
   }
 
   // Method that calculates the hash of the block
   calculateHash() {
-    return sha256(this.index + this.timestamp + JSON.stringify(this.data) + this.previousHash + this.nonce).toString()
+    return sha256(this.timestamp + JSON.stringify(this.transactions) + this.previousHash + this.nonce).toString()
   }
   // Getting the hash with the amount of 0 based on the difficulty
   mineBlock(difficulty) {
@@ -54,7 +54,7 @@ class Blockchain {
   // We mine Pending transactions to add it to the chain
   minePendingTransactions(miningRewardAddress) {
     // Creating a block containing the pending transactions
-    let block = new Block(new Date().toLocaleString(), this.pendingTransactions)
+    let block = new Block(new Date().toLocaleString(), this.pendingTransactions, this.getLatestBlock().hash)
     block.mineBlock(this.difficulty)
     console.log('Block successfully mined!')
     this.chain.push(block)
