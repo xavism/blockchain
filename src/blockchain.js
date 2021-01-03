@@ -1,9 +1,30 @@
 const sha256 = require('crypto-js/sha256')
+const EC = require('elliptic').ec
+const ec = new EC('secp256k1')
 class Transaction {
   constructor(fromAddress, toAddress, amount) {
     this.fromAddress = fromAddress
     this.toAddress = toAddress
     this.amount = amount
+  }
+
+  calculateHash() {
+    return sha256(this.fromAddress + this.toAddress + this.amount).toString()
+  }
+
+  signTransaction(signingKey) {
+    if (signingKey.getPublic('hex') !== this.fromAddress) throw new Error('You cannot sign transactions for other wallets')
+
+    const hashTx = this.calculateHash()
+    const sig = signingKey.sign(hashTx, 'base64')
+    this.signature = sig.toDER('hex')
+  }
+
+  isValid() {
+    if (this.fromAddress === null) return true
+    if (!this.signature || this.signature.length === 0) throw new Error('No signature in this transaction')
+    const publicKey = ec.keyFromPublic(this.fromAddress, 'hex')
+    return publicKey.verify(this.calculateHash(), this.signature)
   }
 }
 class Block {
@@ -12,13 +33,13 @@ class Block {
     this.timestamp = timestamp
     this.transactions = transactions
     this.previousHash = previousHash
-    this.hash = this.calculateHash()
     this.nonce = 0
+    this.hash = this.calculateHash()
   }
 
   // Method that calculates the hash of the block
   calculateHash() {
-    return sha256(this.index + this.timestamp + JSON.stringify(this.data) + this.previousHash + this.nonce).toString()
+    return sha256(this.timestamp + JSON.stringify(this.transactions) + this.previousHash + this.nonce).toString()
   }
   // Getting the hash with the amount of 0 based on the difficulty
   mineBlock(difficulty) {
@@ -28,6 +49,10 @@ class Block {
     }
 
     console.log(`BLOCK MINED: ${this.hash} 💰`)
+  }
+
+  hasValidTransactions() {
+    return this.transactions.every(tx => tx.isValid())
   }
 }
 
@@ -43,7 +68,7 @@ class Blockchain {
 
   // Every blockchain needs a genesis block, it is the first block of the blockchain
   createGenesisBlock() {
-    return new Block(new Date().toLocaleString(), 'Genesis Block', 'Genesis Hash')
+    return new Block(Date.parse("2020-03-01 10:00"), [], '0')
   }
 
   // Get the latest block of the chain
@@ -53,18 +78,25 @@ class Blockchain {
 
   // We mine Pending transactions to add it to the chain
   minePendingTransactions(miningRewardAddress) {
+    // Adding the miner Tx to the pending ones to get the reward
+    const rewardTX = new Transaction(null, miningRewardAddress, this.miningReward)
+    this.pendingTransactions.push(rewardTX)
     // Creating a block containing the pending transactions
-    let block = new Block(new Date().toLocaleString(), this.pendingTransactions)
+    let block = new Block(new Date().toLocaleDateString(), this.pendingTransactions, this.getLatestBlock().hash)
     block.mineBlock(this.difficulty)
+    
     console.log('Block successfully mined!')
     this.chain.push(block)
-    // Cleaning the transactions that have been added to the chain but adding the reward to the miner
-    this.pendingTransactions = [
-      new Transaction(null, miningRewardAddress, this.miningReward)
-    ]
+    // Cleaning the transactions that have been added to the chain
+    this.pendingTransactions = []
   }
 
-  createTransaction(transaction) {
+  addTransaction(transaction) {
+
+    if(!transaction.fromAddress || !transaction.toAddress) throw new Error('Transaction must include from and to address')
+
+    if(!transaction.isValid()) throw new Error('Cannot add invalid transaction to chain')
+
     this.pendingTransactions.push(transaction)
   }
 
@@ -91,25 +123,17 @@ class Blockchain {
     return this.chain.every((block, index) => {
       // first block is not evaluated
       if (index === 0) return true
+      // ensure all transactions are signed correctly
+      if (!block.hasValidTransactions()) return false
       // ensure that the hash info of the current block is ok and hasn't been modified
-      let currentBlockCheck = block.hash === block.calculateHash()
+      if (block.hash !== block.calculateHash()) return false
       // checking that the prevous block information is ok
-      let previousBlockCheck = block.previousHash === this.chain[index - 1].calculateHash()
-      return currentBlockCheck && previousBlockCheck
+      if (block.previousHash !== this.chain[index - 1].calculateHash()) return false
+      
+      return true
     })
   }
 }
 
-let xaviCoin = new Blockchain()
-xaviCoin.createTransaction(new Transaction('Alfa', 'Beta', 100))
-xaviCoin.createTransaction(new Transaction('Beta', 'Alfa', 50))
-
-console.log('\nStarting the miner.⛏️..')
-xaviCoin.minePendingTransactions('Charly')
-
-console.log(`\nBalance of Charly (the miner⛏️) is ${xaviCoin.getBalanceOfAddress('Charly')}`)
-
-console.log('\nStarting the miner⛏️...')
-xaviCoin.minePendingTransactions('Charly')
-
-console.log(`\nBalance of Charly (the miner⛏️) is ${xaviCoin.getBalanceOfAddress('Charly')}`)
+module.exports.Blockchain = Blockchain
+module.exports.Transaction = Transaction
