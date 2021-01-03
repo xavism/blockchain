@@ -68,7 +68,7 @@ class Blockchain {
 
   // Every blockchain needs a genesis block, it is the first block of the blockchain
   createGenesisBlock() {
-    return new Block(Date.parse("2020-03-01 10:00"), [], '0')
+    return new Block(new Date('2020-03-01 10:00').toLocaleDateString(), [], '0')
   }
 
   // Get the latest block of the chain
