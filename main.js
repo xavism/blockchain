@@ -1,11 +1,16 @@
 const sha256 = require('crypto-js/sha256')
-
+class Transaction {
+  constructor(fromAddress, toAddress, amount) {
+    this.fromAddress = fromAddress
+    this.toAddress = toAddress
+    this.amount = amount
+  }
+}
 class Block {
-  // All the info need to create a block in our chain
-  constructor(index, timestamp, data, previousHash = '') {
-    this.index = index
+  // All the info need to create a block in our chain, in this step we change data with a transactions array per each block
+  constructor(timestamp, transactions, previousHash = '') {
     this.timestamp = timestamp
-    this.data = data
+    this.transactions = transactions
     this.previousHash = previousHash
     this.hash = this.calculateHash()
     this.nonce = 0
@@ -22,19 +27,23 @@ class Block {
       this.hash = this.calculateHash()
     }
 
-    console.log(`Block mined: ${this.hash}`)
+    console.log(`BLOCK MINED: ${this.hash} 💰`)
   }
 }
 
 class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()]
-    this.difficulty = 4
+    this.difficulty = 2
+    // Transactions pending  to be mined
+    this.pendingTransactions = []
+    // the reward that will be given to the miners
+    this.miningReward = 100
   }
 
   // Every blockchain needs a genesis block, it is the first block of the blockchain
   createGenesisBlock() {
-    return new Block(0, new Date().toLocaleString(), 'Genesis Block', 'Genesis Hash')
+    return new Block(new Date().toLocaleString(), 'Genesis Block', 'Genesis Hash')
   }
 
   // Get the latest block of the chain
@@ -42,14 +51,38 @@ class Blockchain {
     return this.chain[this.chain.length - 1]
   }
 
-  // add a new block
-  addBlock(block) {
-    // You need to put information that refeers the latests block in order to be validated in the chain
-    block.previousHash = this.getLatestBlock().hash
-    // the info of the current block has changed, so its hash should change too, the hash has to be recalculated
+  // We mine Pending transactions to add it to the chain
+  minePendingTransactions(miningRewardAddress) {
+    // Creating a block containing the pending transactions
+    let block = new Block(new Date().toLocaleString(), this.pendingTransactions)
     block.mineBlock(this.difficulty)
-    // We add the new block. In more complex blockchains, more checks are needed in order to add a block, but is it perfect for our example
+    console.log('Block successfully mined!')
     this.chain.push(block)
+    // Cleaning the transactions that have been added to the chain but adding the reward to the miner
+    this.pendingTransactions = [
+      new Transaction(null, miningRewardAddress, this.miningReward)
+    ]
+  }
+
+  createTransaction(transaction) {
+    this.pendingTransactions.push(transaction)
+  }
+
+  // To check the total amount of an address, all the chain has to be checked
+  getBalanceOfAddress(address) {
+    let balance = 0
+    // Looping all blocks
+    for (const block of this.chain) {
+      // Looping all transactions inside a block
+      for(const trans of block.transactions) {
+        // If you are the sender, the total amount have to decrease
+        if(trans.fromAddress === address) balance -= trans.amount
+        // If you are the receiver, the total amount have to increase
+        if(trans.toAddress === address) balance += trans.amount
+      }
+    }
+
+    return balance
   }
 
   // Chacks if the chain is valid
@@ -68,8 +101,15 @@ class Blockchain {
 }
 
 let xaviCoin = new Blockchain()
-console.log('Mining block 1...')
-xaviCoin.addBlock(new Block(1, new Date('03/01/2021 05:04:25').toLocaleString(), { amount: 4 }))
+xaviCoin.createTransaction(new Transaction('Alfa', 'Beta', 100))
+xaviCoin.createTransaction(new Transaction('Beta', 'Alfa', 50))
 
-console.log('Mining block 2...')
-xaviCoin.addBlock(new Block(2, new Date('03/01/2021 05:04:30').toLocaleString(), { amount: 10 }))
+console.log('\nStarting the miner.⛏️..')
+xaviCoin.minePendingTransactions('Charly')
+
+console.log(`\nBalance of Charly (the miner⛏️) is ${xaviCoin.getBalanceOfAddress('Charly')}`)
+
+console.log('\nStarting the miner⛏️...')
+xaviCoin.minePendingTransactions('Charly')
+
+console.log(`\nBalance of Charly (the miner⛏️) is ${xaviCoin.getBalanceOfAddress('Charly')}`)
