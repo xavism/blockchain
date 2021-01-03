@@ -1,4 +1,6 @@
-const { Blockchain, Transaction } = require('./blockchain')
+import Blockchain from "./blockchain"
+import Transaction from "./transaction"
+
 const EC = require('elliptic').ec
 const ec = new EC('secp256k1')
 
@@ -17,6 +19,3 @@ xaviCoin.minePendingTransactions(myWalletAddress)
 
 console.log(`\nBalance of ${myWalletAddress} (the miner⛏️) is ${xaviCoin.getBalanceOfAddress(myWalletAddress)}`)
 console.log('Is chain Valid?', xaviCoin.isChainValid())
-
-xaviCoin.chain[1].transactions[0].amount = 1
-console.log('Is chain Valid?',xaviCoin.isChainValid())
