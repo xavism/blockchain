@@ -8,17 +8,28 @@ class Block {
     this.data = data
     this.previousHash = previousHash
     this.hash = this.calculateHash()
+    this.nonce = 0
   }
 
   // Method that calculates the hash of the block
   calculateHash() {
-    return sha256(this.index + this.timestamp + JSON.stringify(this.data) + this.previousHash).toString()
+    return sha256(this.index + this.timestamp + JSON.stringify(this.data) + this.previousHash + this.nonce).toString()
+  }
+  // Getting the hash with the amount of 0 based on the difficulty
+  mineBlock(difficulty) {
+    while (this.hash.substring(0, difficulty) !== Array(difficulty).fill(0).join('')) {
+      this.nonce++
+      this.hash = this.calculateHash()
+    }
+
+    console.log(`Block mined: ${this.hash}`)
   }
 }
 
 class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()]
+    this.difficulty = 4
   }
 
   // Every blockchain needs a genesis block, it is the first block of the blockchain
@@ -36,7 +47,7 @@ class Blockchain {
     // You need to put information that refeers the latests block in order to be validated in the chain
     block.previousHash = this.getLatestBlock().hash
     // the info of the current block has changed, so its hash should change too, the hash has to be recalculated
-    block.hash = block.calculateHash()
+    block.mineBlock(this.difficulty)
     // We add the new block. In more complex blockchains, more checks are needed in order to add a block, but is it perfect for our example
     this.chain.push(block)
   }
@@ -57,26 +68,8 @@ class Blockchain {
 }
 
 let xaviCoin = new Blockchain()
+console.log('Mining block 1...')
 xaviCoin.addBlock(new Block(1, new Date('03/01/2021 05:04:25').toLocaleString(), { amount: 4 }))
+
+console.log('Mining block 2...')
 xaviCoin.addBlock(new Block(2, new Date('03/01/2021 05:04:30').toLocaleString(), { amount: 10 }))
-console.log('Is blockchain valid?', xaviCoin.isChainValid())
-// true 
-// Now we are doing bad things, trying to change the blockchain to get 4000 coins instead of 4
-xaviCoin.chain[1].data = { amount: 1000 }
-//Now the blochain is not valid
-console.log('Is blockchain valid?', xaviCoin.isChainValid())
-// true
-
-// Ok, ease, Lets recalculate the hash, no one will notice the change
-xaviCoin.chain[1].hash = xaviCoin.chain[1].calculateHash()
-console.log('Is blockchain valid?', xaviCoin.isChainValid())
-// false
-
-// What? Why is this happening, remember that the block information hash is also stored in the next block, so it is failing. 
-
-// If we restore the chain:
-xaviCoin.chain[1].data = { amount: 4 }
-xaviCoin.chain[1].hash = xaviCoin.chain[1].calculateHash()
-console.log('Is blockchain valid?', xaviCoin.isChainValid())
-
-console.log(JSON.stringify(xaviCoin, null, 4))
