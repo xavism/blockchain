@@ -4,8 +4,8 @@ import Transaction from './transaction'
 export default class Block {
   private timestamp: Date
   private transactions: Transaction[]
-  private previousHash: string
-  private nonce: number = 0
+  private previousHash = ''
+  private nonce = 0
   private hash: string
 
   // All the info need to create a block in our chain, in this step we change data with a transactions array per each block
@@ -18,11 +18,21 @@ export default class Block {
 
   // Method that calculates the hash of the block
   calculateHash(): string {
-    return SHA256(this.timestamp + JSON.stringify(this.transactions) + this.previousHash + this.nonce).toString()
+    return SHA256(
+      this.timestamp +
+        JSON.stringify(this.transactions) +
+        this.previousHash +
+        this.nonce
+    ).toString()
   }
   // Getting the hash with the amount of 0 based on the difficulty
   mineBlock(difficulty: number) {
-    while (this.hash.substring(0, difficulty) !== Array(difficulty).fill(0).join('')) {
+    while (
+      this.hash.substring(0, difficulty) !==
+      Array(difficulty)
+        .fill(0)
+        .join('')
+    ) {
       this.nonce++
       this.hash = this.calculateHash()
     }
@@ -34,7 +44,7 @@ export default class Block {
     return this.transactions.every(tx => tx.isValid())
   }
 
-// GETTERS
+  // GETTERS
 
   getHash(): string {
     return this.hash

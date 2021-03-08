@@ -1,5 +1,6 @@
 import Transaction from './transaction'
 import Block from './block'
+import Wallet from './wallet'
 
 export default class Blockchain {
   private chain: Block[]
@@ -27,40 +28,52 @@ export default class Blockchain {
   }
 
   // We mine Pending transactions to add it to the chain
-  minePendingTransactions(miningRewardAddress: string) {
+  minePendingTransactions(miningRewardAddress: Wallet) {
     // Adding the miner Tx to the pending ones to get the reward
-    const rewardTX = new Transaction(null, miningRewardAddress, this.miningReward)
+    const rewardTX = new Transaction(
+      null,
+      miningRewardAddress,
+      this.miningReward
+    )
     this.pendingTransactions.push(rewardTX)
     // Creating a block containing the pending transactions
-    let block = new Block(this.pendingTransactions, this.getLatestBlock().getHash())
+    const block = new Block(
+      this.pendingTransactions,
+      this.getLatestBlock().getHash()
+    )
     block.mineBlock(this.difficulty)
-    
+
     console.log('Block successfully mined!')
     this.chain.push(block)
     // Cleaning the transactions that have been added to the chain
     this.pendingTransactions = []
   }
 
-  addTransaction(transaction) {
+  addTransaction(transaction: Transaction) {
+    if (
+      !transaction.fromAddress.key.getPublic('hex') ||
+      !transaction.toAddress.key.getPublic('hex')
+    )
+      throw new Error('Transaction must include from and to address')
 
-    if(!transaction.fromAddress || !transaction.toAddress) throw new Error('Transaction must include from and to address')
-
-    if(!transaction.isValid()) throw new Error('Cannot add invalid transaction to chain')
+    if (!transaction.isValid())
+      throw new Error('Cannot add invalid transaction to chain')
 
     this.pendingTransactions.push(transaction)
   }
 
   // To check the total amount of an address, all the chain has to be checked
-  getBalanceOfAddress(address): number {
+  getBalanceOfAddress(address: string): number {
     let balance = 0
     // Looping all blocks
     for (const block of this.chain) {
       // Looping all transactions inside a block
-      for(const tx of block.getTransactions()) {
+      for (const tx of block.getTransactions()) {
         // If you are the sender, the total amount have to decrease
-        if(tx.fromAddress === address) balance -= tx.amount
+        if (tx.fromAddress.key.getPublic('hex') === address)
+          balance -= tx.amount
         // If you are the receiver, the total amount have to increase
-        if(tx.toAddress === address) balance += tx.amount
+        if (tx.toAddress.key.getPublic('hex') === address) balance += tx.amount
       }
     }
 
@@ -78,8 +91,9 @@ export default class Blockchain {
       // ensure that the hash info of the current block is ok and hasn't been modified
       if (block.getHash() !== block.calculateHash()) return false
       // checking that the prevous block information is ok
-      if (block.getPreviousHash() !== this.chain[index - 1].calculateHash()) return false
-      
+      if (block.getPreviousHash() !== this.chain[index - 1].calculateHash())
+        return false
+
       return true
     })
   }

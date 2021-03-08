@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 html, body {
-  @apply bg-melon text-black font-mono
+  @apply bg-white text-gray-900 font-mono
 }
 
-.bg-red, .bg-red-dark, .bg-blue, .bg-blue-dark, .bg-wolf, .bf-wolf-dark {
+.bg-rose-500 {
   @apply text-white
 }
