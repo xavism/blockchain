@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/blockchain/static/css/main.3ec55941.chunk.css",
+    "main.js": "/blockchain/static/js/main.e6411a8e.chunk.js",
+    "main.js.map": "/blockchain/static/js/main.e6411a8e.chunk.js.map",
+    "runtime-main.js": "/blockchain/static/js/runtime-main.ee96e1dd.js",
+    "runtime-main.js.map": "/blockchain/static/js/runtime-main.ee96e1dd.js.map",
+    "static/js/2.ecdf91d0.chunk.js": "/blockchain/static/js/2.ecdf91d0.chunk.js",
+    "static/js/2.ecdf91d0.chunk.js.map": "/blockchain/static/js/2.ecdf91d0.chunk.js.map",
+    "static/js/3.26e6bdc0.chunk.js": "/blockchain/static/js/3.26e6bdc0.chunk.js",
+    "static/js/3.26e6bdc0.chunk.js.map": "/blockchain/static/js/3.26e6bdc0.chunk.js.map",
+    "index.html": "/blockchain/index.html",
+    "static/css/main.3ec55941.chunk.css.map": "/blockchain/static/css/main.3ec55941.chunk.css.map",
+    "static/js/2.ecdf91d0.chunk.js.LICENSE.txt": "/blockchain/static/js/2.ecdf91d0.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ee96e1dd.js",
+    "static/js/2.ecdf91d0.chunk.js",
+    "static/css/main.3ec55941.chunk.css",
+    "static/js/main.e6411a8e.chunk.js"
+  ]
+}
