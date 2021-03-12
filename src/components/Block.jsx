@@ -20,7 +20,7 @@ const Block = ({ index, block }) => {
     return (
       <div className="">
         <div className="flex mb-2">
-          <p><span className="mr-2 font-bold">Hash: </span>{hash}</p>
+          <p className="max-w-xs whitespace-nowrap overflow-hidden overflow-ellipsis"><span className="mr-2 font-bold">Hash: </span>{hash}</p>
         </div>
         <div className="flex mb-2">
           <label className="mr-2 font-bold" htmlFor="nonce">Nonce</label>
