@@ -23,16 +23,16 @@ const CreateTransactions = () => {
     let fromTx = wallets.find(wallet => wallet.publicKey === from)
     let toTx = wallets.find(wallet => wallet.publicKey === to)
     let parsedAmount = parseFloat(amount)
-    let fromFunds = ChainHelper.getBalanceOfAddress(chain, from)
-    if ( fromFunds >= parsedAmount) {
+    let errors = validate(fromTx, toTx, parsedAmount)
+    if (!errors) {
       let tx = TransactionHelper.createTx(fromTx, toTx, parseFloat(amount))
       TransactionHelper.signTx(tx, fromTx)
       dispatch(addTransaction(tx))
       clean()
     }
     else {
-      setError(`Insuficient funds of ${fromTx.name}`)
-      console.error(`Insuficient funds of ${fromTx.name}, current funds: ${fromFunds}`)
+      setError(errors)
+      console.error(errors)
     }
   }
 
@@ -41,6 +41,13 @@ const CreateTransactions = () => {
     setFrom('')
     setTo('')
     setAmount(0)
+  }
+
+  const validate = (fromTx, toTx, amount) => {
+    if (amount <= 0) return 'Amount should be higher than 0'
+    let fromFunds = ChainHelper.getBalanceOfAddress(chain, from)
+    if (fromFunds < amount) return `Insuficient funds of ${fromTx.name}`
+    if (fromTx.publicKey === toTx.publicKey) return 'From and To cannot be the same wallet'
   }
 
   //renders

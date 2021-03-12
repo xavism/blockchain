@@ -27,8 +27,7 @@ class BlockHelper {
   }
 
   static createGenesisBlock(miningReward) {
-    let block = this.createBlock(new Date().toISOString().split('T')[0], [], '0')
-    block.transactions.push(TransactionHelper.createTx(null, WalletHelper.getSatoshi(), miningReward))
+    let block = this.createBlock(new Date().toISOString().split('T')[0], [TransactionHelper.createTx(null, WalletHelper.getSatoshi(), miningReward)], '')
     return block
   }
   // Method that calculates the hash of the block
