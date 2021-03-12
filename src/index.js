@@ -1,24 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
-import reportWebVitals from './reportWebVitals'
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 import store from './redux'
 import { Provider } from 'react-redux'
-import WorkerContext from './contexts/mine.worker'
-import mineWorker from './workers/mine.worker'
-import WebWorker from './workers/base.worker'
-const minerWorker = new WebWorker(mineWorker)
+// import WorkerContext from './contexts/mine.worker'
+// const minerWorker = new Worker('/blockchain/mine.worker.js', { type: module })
 
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <WorkerContext.Provider value={minerWorker}>
+    {/* <WorkerContext.Provider value={minerWorker}> */}
       <Provider store={store}>
         <App />
       </Provider>
-    </WorkerContext.Provider>
+    {/* </WorkerContext.Provider> */}
   </React.StrictMode>,
   document.getElementById('root')
 );

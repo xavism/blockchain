@@ -1,5 +1,4 @@
 import BlockHelper from "../../helpers/block.helper"
-import ChainHelper from "../../helpers/chain.helper"
 import TransactionHelper from "../../helpers/transaction.helper"
 import { ADD_TRANSACTION, CHANGE_DIFFICULTY, CHANGE_REWARD, MINE, UPDATE_BLOCK } from "./types"
 

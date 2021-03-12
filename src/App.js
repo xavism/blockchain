@@ -1,6 +1,6 @@
 import Chain from './components/Chain'
 import Wallets from './components/Wallets'
-import Transactions from './components/Transactions'
+import CreateTransactions from './components/CreateTransactions'
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
           <Wallets />
         </section>
         <section>
-          <Transactions />
+          <CreateTransactions />
         </section>
         </div>
       </div>

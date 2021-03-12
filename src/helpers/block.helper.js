@@ -1,10 +1,12 @@
 import { SHA256 } from 'crypto-js'
+import { generateId } from './utils'
 
 class BlockHelper {
   // All the info need to create a block in our chain, in this step we change data with a transactions array per each block
 
   static createBlock(timestamp, transactions, previousHash = '') {
     return {
+      id: generateId(),
       timestamp,
       transactions,
       previousHash,
@@ -23,7 +25,8 @@ class BlockHelper {
   }
 
   static createGenesisBlock() {
-    return this.createBlock(new Date().toLocaleDateString(), [], '0')
+    console.log(SHA256)
+    return this.createBlock(new Date().toISOString().split('T')[0], [], '0')
   }
   // Method that calculates the hash of the block
   static calculateHash(timestamp, transactions, previousHash, nonce) {
