@@ -34,10 +34,13 @@ const Block = ({ index, block }) => {
           <label className="mr-2 font-bold" htmlFor="hash">Timestamp</label>
           <input className="flex-1 pl-2" value={ timestamp } onChange={(e) => handleInput('timestamp', e)} type="date"/>
         </div>
-        <div>
+        {transactions.length ? 
+          <div>
           <p>Transactions:</p>
           <Transactions transactions={transactions} />
         </div>
+        : null
+        }
       </div>
     )
   }
