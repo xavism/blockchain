@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import ChainHelper from "../helpers/chain.helper"
 import TransactionHelper from "../helpers/transaction.helper"
 import { addTransaction } from "../redux/blockchain/actions"
 
@@ -9,21 +10,30 @@ const CreateTransactions = () => {
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
   const [amount, setAmount] = useState(0)
-
+  const [error, setError] = useState('')
   // redux
   const { wallets } = useSelector(state => state.wallets)
-
+  const { chain } = useSelector(state => state.blockchain)
   //handlers
   const handleInput = (setter, { target: { value }}) => {
     setter(value)
+    setError('')
   }
   const handleAddTransaction = () => {
     let fromTx = wallets.find(wallet => wallet.publicKey === from)
     let toTx = wallets.find(wallet => wallet.publicKey === to)
-    let tx = TransactionHelper.createTx(fromTx, toTx, amount)
-    TransactionHelper.signTx(tx, fromTx)
-    dispatch(addTransaction(tx))
-    clean()
+    let parsedAmount = parseFloat(amount)
+    let fromFunds = ChainHelper.getBalanceOfAddress(chain, from)
+    if ( fromFunds >= parsedAmount) {
+      let tx = TransactionHelper.createTx(fromTx, toTx, parseFloat(amount))
+      TransactionHelper.signTx(tx, fromTx)
+      dispatch(addTransaction(tx))
+      clean()
+    }
+    else {
+      setError(`Insuficient funds of ${fromTx.name}`)
+      console.error(`Insuficient funds of ${fromTx.name}, current funds: ${fromFunds}`)
+    }
   }
 
   //methods
@@ -56,9 +66,12 @@ const CreateTransactions = () => {
             {renderSelectOptions() } 
           </select>
         </div>
-        <div className="flex mb-2">
+        <div className="flex">
           <label className="font-bold mr-2" htmlFor="from">Amount: </label>
           <input className="flex-1" value={amount} onChange={(e) => handleInput(setAmount, e)} type="number" step="10" min="0"/>
+        </div>
+        <div className="h-8 flex items-center text-red-400">
+          { error }
         </div>
         <button
           disabled={!amount || from === '' || to === ''} 

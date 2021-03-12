@@ -36,7 +36,7 @@ const Block = ({ index, block }) => {
         </div>
         {transactions.length ? 
           <div>
-          <p>Transactions:</p>
+          <p className="font-bold">Transactions:</p>
           <Transactions transactions={transactions} />
         </div>
         : null

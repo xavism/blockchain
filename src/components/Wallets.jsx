@@ -1,11 +1,9 @@
 import Wallet from './Wallet'
 import { useDispatch, useSelector } from "react-redux"
 import { createWallet } from "../redux/wallets/actions"
-
 const Wallets = () => {
   const dispatch = useDispatch()
   const { wallets } = useSelector(state => state.wallets)
-
   // renders
   const renderWallets = () => {
     if (!wallets.length) return <p className="py-1">There are no wallets yet</p>
@@ -14,8 +12,8 @@ const Wallets = () => {
 
   const renderWalletPill = (wallet) => {
     return (
-      <div className="m-1 cursor-pointer" key={wallet.publicKey}>
-        <Wallet wallet={wallet} />
+      <div className="m-1 cursor-pointer flex items-center" key={wallet.publicKey}>
+        <Wallet wallet={wallet} withAmount={true}/>
       </div>
     )
   }

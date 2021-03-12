@@ -16,6 +16,22 @@ class ChainHelper {
     return chain[chain.length - 1]
   }
 
+  static getBalanceOfAddress(chain, address) {
+    let balance = 0
+    // Looping all blocks
+    for (const block of chain) {
+      // Looping all transactions inside a block
+      for(const tx of block.transactions) {
+        // If you are the sender, the total amount have to decrease
+        if(tx.fromAddress?.publicKey === address) balance -= parseFloat(tx.amount)
+        // If you are the receiver, the total amount have to increase
+        if(tx.toAddress?.publicKey === address) balance += parseFloat(tx.amount)
+      }
+    }
+
+    return balance
+  }
+
 }
 
 export default ChainHelper

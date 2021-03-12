@@ -2,7 +2,7 @@ import WalletHelper from "../../helpers/wallet.helper";
 import { ADD_WALLET } from "./types";
 
 const initialState = {
-  wallets: [WalletHelper.createRandomWallet(), WalletHelper.createRandomWallet()]
+  wallets: [WalletHelper.getSatoshi(), WalletHelper.createRandomWallet(), WalletHelper.createRandomWallet()]
 }
 
 const reducer = (state = initialState, action) => {
