@@ -20,4 +20,20 @@ export default class ColorHelper {
   static getColorFromColorPalette() {
     return colorPalette[Math.floor(Math.random() * 100000) % colorPalette.length]
   }
+  static hashCode(str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+  } 
+
+  static intToRGB(i) {
+    let str = this.hashCode(i)
+    var c = (str & 0x00FFFFFF)
+        .toString(16)
+        .toUpperCase();
+
+    return "#"+"00000".substring(0, 6 - c.length) + c;
+  }
 }

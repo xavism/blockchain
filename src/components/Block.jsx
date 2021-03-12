@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux"
 import { updateBlock } from "../redux/blockchain/actions"
 import { SHA256 } from 'crypto-js'
 import Transactions from './Transactions'
+import ColorHelper from "../helpers/color.helper"
 const Block = ({ index, block }) => {
   const { hash, nonce, previousHash, timestamp, transactions} = block
   const dispatch = useDispatch()
@@ -15,12 +16,17 @@ const Block = ({ index, block }) => {
       hash: SHA256(timestamp + JSON.stringify(transactions) + previousHash + nonce).toString()
     }))
   }
+
+  const parsedHash = () => hash.substring(0,10)
   //renders
   const renderBlock = () => {
     return (
       <div className="">
-        <div className="flex mb-2">
-          <p className="max-w-xs whitespace-nowrap overflow-hidden overflow-ellipsis"><span className="mr-2 font-bold">Hash: </span>{hash}</p>
+        <div className="flex mb-2 rounded">
+          <p className="max-w-xs whitespace-nowrap overflow-hidden overflow-ellipsis">
+            <span className="mr-2 font-bold">Hash: </span>
+            <span className="rounded px-2 text-white" style={{backgroundColor: ColorHelper.intToRGB(parsedHash())}} >{parsedHash()}...</span>
+          </p>
         </div>
         <div className="flex mb-2">
           <label className="mr-2 font-bold" htmlFor="nonce">Nonce</label>
