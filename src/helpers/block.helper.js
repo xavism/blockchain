@@ -27,7 +27,6 @@ class BlockHelper {
   }
 
   static createGenesisBlock(miningReward) {
-    console.log(SHA256)
     let block = this.createBlock(new Date().toISOString().split('T')[0], [], '0')
     block.transactions.push(TransactionHelper.createTx(null, WalletHelper.getSatoshi(), miningReward))
     return block
