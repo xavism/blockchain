@@ -1,10 +1,10 @@
 # Blockchain Playground
 
-this is a website to test how an easy blockchian works, only for educational purposes, DO NOT USE IT IN PRODUCTION
+This is a website to test how an **easy blockchian** works, only for educational purposes, **DO NOT USE IT IN PRODUCTION**
 
 ![BlockChain playground](https://github.com/xavism/blockchain/blob/ui-react/public/screenshot.png?raw=true)
 
-Current production version [here](https://xavism.github.io/blockchain)
+Current production version 💥💥[here](https://xavism.github.io/blockchain)💥💥
 ## Available Scripts
 
 In the project directory, you can run:
