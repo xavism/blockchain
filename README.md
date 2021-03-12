@@ -4,7 +4,7 @@ Click 💥 [here](https://xavism.github.io/blockchain) 💥 for current deployed
 
 This is a website to test how an **easy blockchian** works, only for educational purposes, **DO NOT USE IT IN PRODUCTION**
 
-![BlockChain playground](https://github.com/xavism/blockchain/blob/ui-react/public/screenshot.png?raw=true)
+![BlockChain playground](https://xavism.github.io/blockchain/screenshot.png)
 
 ## Available Scripts
 
