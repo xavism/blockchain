@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux"
 import { updateBlock } from "../redux/blockchain/actions"
-import { SHA256 } from 'crypto-js'
-import Transactions from './Transactions'
+import EditableTransactions from './EditableTransactions'
 import ColorHelper from "../helpers/color.helper"
+import BlockHelper from "../helpers/block.helper"
 const Block = ({ index, block }) => {
   const { hash, nonce, previousHash, timestamp, transactions} = block
   const dispatch = useDispatch()
@@ -16,7 +16,7 @@ const Block = ({ index, block }) => {
       index,
       {
         ...newBlock,
-        hash: SHA256(newBlock.timestamp + JSON.stringify(newBlock.transactions) + newBlock.previousHash + newBlock.nonce).toString()
+        hash: BlockHelper.calculateHash(newBlock.timestamp, newBlock.transactions, newBlock.previousHash, newBlock.nonce)
       }))
   }
 
@@ -50,7 +50,7 @@ const Block = ({ index, block }) => {
         {transactions.length ? 
           <div>
           <p className="font-bold">Transactions:</p>
-          <Transactions transactions={transactions} />
+          <EditableTransactions transactions={transactions} blockIndex={index}/>
         </div>
         : null
         }

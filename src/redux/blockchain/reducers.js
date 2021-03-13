@@ -1,6 +1,6 @@
 import BlockHelper from "../../helpers/block.helper"
 import TransactionHelper from "../../helpers/transaction.helper"
-import { ADD_TRANSACTION, CHANGE_DIFFICULTY, CHANGE_REWARD, MINE, UPDATE_BLOCK } from "./types"
+import { ADD_TRANSACTION, CHANGE_DIFFICULTY, CHANGE_REWARD, MINE, UPDATE_BLOCK, UPDATE_TX } from "./types"
 const INITIAL_REWARD= 100
 const initialState = {
   chain: [BlockHelper.createGenesisBlock(INITIAL_REWARD)],
@@ -10,6 +10,7 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
+  let chain
   switch (action.type) {
     case CHANGE_DIFFICULTY: 
       return {
@@ -22,7 +23,7 @@ const reducer = (state = initialState, action) => {
         miningReward: action.payload
       }
     case UPDATE_BLOCK:
-      let chain = [...state.chain]
+      chain = [...state.chain]
       chain.splice(action.payload.index, 1, action.payload.block)
       return {
         ...state,
@@ -47,6 +48,19 @@ const reducer = (state = initialState, action) => {
         ...state,
         pendingTransactions: [],
         chain: [...state.chain, action.payload]
+      }
+    case UPDATE_TX:
+      chain = [...state.chain]
+      let block = {...chain[action.payload.blockIndex]}
+      block.transactions.splice(action.payload.txIndex, 1, action.payload.tx)
+      let newBlock = {
+        ...block,
+        hash: BlockHelper.calculateHash(block.timestamp, block.transactions, block.previousHash, block.nonce)
+      }
+      chain.splice(action.payload.blockIndex, 1, newBlock)
+      return {
+        ...state,
+        chain
       }
     default:
       return state

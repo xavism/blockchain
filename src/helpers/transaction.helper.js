@@ -4,9 +4,9 @@ import { ec } from 'elliptic'
 const EC = new ec('secp256k1')
 
 class TransactionHelper {
-  static createTx (from, to, amount) {
+  static createTx (from, to, amount, id = null) {
     return {
-      id: generateId(),
+      id: id || generateId(),
       fromAddress: from,
       toAddress: to,
       amount,

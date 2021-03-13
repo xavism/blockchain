@@ -19,6 +19,7 @@ class BlockHelper {
   
   // Getting the hash with the amount of 0 based on the difficulty
   static mineBlock(block, difficulty) {
+
     let { timestamp, transactions, previousHash } = block
     while (block.hash.substring(0, difficulty) !== Array(difficulty).fill(0).join('')) {
       block.nonce++
@@ -35,8 +36,8 @@ class BlockHelper {
     return SHA256(timestamp + JSON.stringify(transactions) + previousHash + nonce).toString()
   }
 
-  static hasValidTransactions(transactions) {
-    return transactions.every(tx => tx.isValid())
+  static hasValidTransactions(block) {
+    return block.transactions.every(tx => TransactionHelper.isValid(tx))
   }
 }
 

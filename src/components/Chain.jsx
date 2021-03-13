@@ -2,7 +2,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { changeDifficulty, changeReward } from "../redux/blockchain/actions"
 //import mineWorker from './../workers/mine.worker'
 import Block from './Block'
+import ValidationTag from './ValidationTag'
 import PendingTX from "./PendingTransactions"
+import ChainHelper from "../helpers/chain.helper"
 const Chain = () => {
   //state
   const { difficulty, miningReward, chain } = useSelector(state => state.blockchain)
@@ -10,10 +12,10 @@ const Chain = () => {
 
   //handlers
   const handleDifficulty = ({ target: { value }}) => {
-    dispatch(changeDifficulty(parseInt(value)))
+    dispatch(changeDifficulty(parseInt(value === '' ? 0 : value)))
   }
   const handleMiningReward = ({ target: { value }}) => {
-    dispatch(changeReward(parseFloat(value)))
+    dispatch(changeReward(parseFloat(value === '' ? 0 : value)))
   }
 
   //renders
@@ -23,7 +25,10 @@ const Chain = () => {
 
   return (
     <div>
-      <h1 className="font-bold text-2xl mb-4">Blockchain</h1>
+      <div className="flex items-center mb-4">
+        <h1 className="font-bold text-2xl mr-4">Blockchain</h1>
+        <ValidationTag valid={ChainHelper.isValidChain(chain)}/>
+      </div>
       <div className="flex justify-between mb-4">
         <div>
           <label className="mr-4"htmlFor="difficulty">Difficulty: </label>

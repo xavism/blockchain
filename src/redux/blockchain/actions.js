@@ -1,4 +1,4 @@
-import { ADD_TRANSACTION, CHANGE_DIFFICULTY, CHANGE_REWARD, MINE, UPDATE_BLOCK } from "./types"
+import { ADD_TRANSACTION, CHANGE_DIFFICULTY, CHANGE_REWARD, MINE, UPDATE_BLOCK, UPDATE_TX } from "./types"
 
 export const changeDifficulty = (difficulty) => {
   return {
@@ -28,6 +28,17 @@ export const addTransaction = (tx) => {
   return {
     type: ADD_TRANSACTION,
     payload: tx
+  }
+}
+
+export const updateTransaction = (blockIndex, txIndex, tx) => {
+  return {
+    type: UPDATE_TX,
+    payload: {
+      blockIndex,
+      txIndex,
+      tx
+    }
   }
 }
 

@@ -58,7 +58,7 @@ const CreateTransactions = () => {
   return (
     <div className="mb-4">
       <h2 className="font-bold text-xl mb-4">Transactions</h2>
-      <div className="p-4 rounded bg-gray-100 w-full">
+      <div className="p-4 rounded bg-gray-100 w-full shadow">
         <div className="flex mb-2">
           <label className="font-bold mr-2" htmlFor="from">From Address: </label>
           <select className="flex-1" name="from" id="from" value={from} onChange={(e) => handleInput(setFrom, e)}>
