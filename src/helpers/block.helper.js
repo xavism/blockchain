@@ -39,6 +39,17 @@ class BlockHelper {
   static hasValidTransactions(block) {
     return block.transactions.every(tx => TransactionHelper.isValid(tx))
   }
+  static isValid(block, chain, index) {
+    if (!this.hasValidTransactions(block)) return false
+      // ensure that the hash info of the current block is ok and hasn't been modified
+      if (block.hash !== this.calculateHash(block.timestamp, block.transactions, block.previousHash, block.nonce)) return false
+      if(index === 0) return true
+      // checking that the prevous block information is ok
+      let { timestamp, transactions, previousHash, nonce } = chain[index - 1]
+      if (block.previousHash !== this.calculateHash(timestamp, transactions, previousHash, nonce)) return false
+      if (!this.isValid(chain[index - 1], chain, index - 1)) return false
+      return true
+  }
 }
 
 export default BlockHelper

@@ -34,16 +34,7 @@ class ChainHelper {
 
   static isValidChain(chain) {
     // Analyzes each block (the genesis shouldn't be analyzed) comparing the store information of the previous block with the current information of the previousblock, recalculating the hash
-    return chain.every((block, index) => {
-      if(index === 0) return true
-      // ensure all transactions are signed correctly
-      if (!BlockHelper.hasValidTransactions(block)) return false
-      // checking that the prevous block information is ok
-      let { timestamp, transactions, previousHash, nonce } = chain[index - 1]
-      if (block.previousHash !== BlockHelper.calculateHash(timestamp, transactions, previousHash, nonce)) return false
-      
-      return true
-    })
+    return chain.every((block, index) => BlockHelper.isValid(block, chain, index))
   }
 }
 

@@ -55,7 +55,7 @@ const reducer = (state = initialState, action) => {
       block.transactions.splice(action.payload.txIndex, 1, action.payload.tx)
       let newBlock = {
         ...block,
-        hash: BlockHelper.calculateHash(block.timestamp, block.transactions, block.previousHash, block.nonce)
+        //hash: BlockHelper.calculateHash(block.timestamp, block.transactions, block.previousHash, block.nonce)
       }
       chain.splice(action.payload.blockIndex, 1, newBlock)
       return {
