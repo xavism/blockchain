@@ -2,9 +2,10 @@
 
 Click 💥 [here](https://xavism.github.io/blockchain) 💥 for current deployed version 
 
-This is a website to test how an **easy blockchian** works, only for educational purposes, **DO NOT USE IT IN PRODUCTION**
+This is a website to test how an **easy blockchain** works, only for educational purposes, **DO NOT USE IT IN PRODUCTION**
 
-![BlockChain playground](https://xavism.github.io/blockchain/screenshot.png)
+![Blockchain playground validated](https://xavism.github.io/blockchain/screenshot_valid.png)
+![Blockchain playground invalid](https://xavism.github.io/blockchain/screenshot_invalid.png)
 
 ## Available Scripts
 
