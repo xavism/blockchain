@@ -13,7 +13,7 @@ const CreateTransactions = () => {
   const [error, setError] = useState('')
   // redux
   const { wallets } = useSelector(state => state.wallets)
-  const { chain } = useSelector(state => state.blockchain)
+  const { chain, pendingTransactions } = useSelector(state => state.blockchain)
   //handlers
   const handleInput = (setter, { target: { value }}) => {
     setter(value)
@@ -45,7 +45,7 @@ const CreateTransactions = () => {
 
   const validate = (fromTx, toTx, amount) => {
     if (amount <= 0) return 'Amount should be higher than 0'
-    let fromFunds = ChainHelper.getBalanceOfAddress(chain, from)
+    let fromFunds = ChainHelper.getBalanceOfAddress([...chain, {transactions: pendingTransactions}], from)
     if (fromFunds < amount) return `Insuficient funds of ${fromTx.name}`
     if (fromTx.publicKey === toTx.publicKey) return 'From and To cannot be the same wallet'
   }

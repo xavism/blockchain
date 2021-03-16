@@ -28,7 +28,6 @@ class ChainHelper {
         if(tx.toAddress?.publicKey === address) balance += parseFloat(tx.amount)
       }
     }
-
     return balance
   }
 

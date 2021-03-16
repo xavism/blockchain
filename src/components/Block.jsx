@@ -24,8 +24,10 @@ const Block = ({ index, block }) => {
         //hash: BlockHelper.calculateHash(newBlock.timestamp, newBlock.transactions, newBlock.previousHash, newBlock.nonce)
       }))
   }
+  const isValidBlock = useCallback(() => BlockHelper.isValid(block, chain, index), [block, chain, index])
+
   const parsedHash = useCallback(() => BlockHelper.calculateHash(timestamp, transactions, previousHash, nonce), [timestamp, transactions, previousHash, nonce])
-  const blockColor = () => ColorHelper.intToRGB(parsedHash())
+  const blockColor = useCallback(() => ColorHelper.intToRGB(parsedHash()), [parsedHash])
   //renders
   const renderBlock = () => {
     return (
@@ -37,7 +39,7 @@ const Block = ({ index, block }) => {
             <span className="rounded px-2 text-white" style={{backgroundColor: blockColor()}} >{parsedHash().substring(0,10)}...</span>
           </p>
           <div>
-            <ValidationTag valid={BlockHelper.isValid(block, chain, index)} />
+            <ValidationTag valid={isValidBlock()} />
           </div>
         </div>
         <div className="flex mb-2">

@@ -5,6 +5,7 @@ import { updateTransaction } from '../redux/blockchain/actions'
 import ColorHelper from '../helpers/color.helper'
 import TransactionHelper from '../helpers/transaction.helper'
 import ValidationTag from './ValidationTag'
+import { useCallback } from 'react'
 const EditableTransactions = ({transactions, blockIndex}) => {
   const ADDRESS_TYPE = {
     FROM: 'fromAddress',
@@ -28,8 +29,11 @@ const EditableTransactions = ({transactions, blockIndex}) => {
     }
     dispatch(updateTransaction(blockIndex, index, newTx))
   }
+
+  //methods
+  const getColor = (hash) => ColorHelper.intToRGB(hash.substring(0,10))
   // renders
-  const renderTransactions = () => {
+  const renderTransactions = useCallback(() => {
     return transactions.map((tx, i) => {
       const { fromAddress, toAddress, signature } = tx
       const hash = TransactionHelper.calculateHash(fromAddress ? fromAddress.publicKey : null, toAddress.publicKey, tx.amount)
@@ -51,13 +55,13 @@ const EditableTransactions = ({transactions, blockIndex}) => {
         </select>
         <div className="whitespace-nowrap overflow-hidden overflow-ellipsis">
             <span className="mx-2 font-bold">Tx Hash: </span>
-            <span className="rounded px-2 text-white" style={{backgroundColor: ColorHelper.intToRGB(hash.substring(0,10))}} >{hash.substring(0,10)}...</span>
+            <span className="rounded px-2 text-white" style={{backgroundColor: getColor(hash.substring(0,10))}} >{hash.substring(0,10)}...</span>
         </div>
         {
           signature !== '' ?
           (<div className="whitespace-nowrap overflow-hidden overflow-ellipsis">
             <span className="mx-2 font-bold">Sig: </span>
-            <span className="rounded px-2 text-white" style={{backgroundColor: ColorHelper.intToRGB(signature.substring(0,10))}} >{signature.substring(0,10)}...</span>
+            <span className="rounded px-2 text-white" style={{backgroundColor: getColor(signature.substring(0,10))}} >{signature.substring(0,10)}...</span>
           </div>)
           :
           null
@@ -67,7 +71,7 @@ const EditableTransactions = ({transactions, blockIndex}) => {
         </div>
       </div>)
     })
-  }
+  }, [transactions, selectOptions])
 
   return (
     <div className="">

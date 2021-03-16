@@ -1,8 +1,9 @@
+import { useCallback } from 'react'
 import Wallet from './Wallet'
 const Transactions = ({transactions}) => {
 
   // renders
-  const renderTransactions = () => {
+  const renderTransactions = useCallback(() => {
     return transactions.map(tx => {
       const { fromAddress, toAddress } = tx
       return (<div className="flex items-center my-2" key={tx.id}>
@@ -11,7 +12,7 @@ const Transactions = ({transactions}) => {
         <Wallet wallet={toAddress} />
       </div>)
     })
-  }
+  }, [transactions])
 
   return (
     <div className="px-2 py-2">

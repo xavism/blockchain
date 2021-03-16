@@ -5,6 +5,7 @@ import Block from './Block'
 import ValidationTag from './ValidationTag'
 import PendingTX from "./PendingTransactions"
 import ChainHelper from "../helpers/chain.helper"
+import { useCallback } from "react"
 const Chain = () => {
   //state
   const { difficulty, miningReward, chain } = useSelector(state => state.blockchain)
@@ -19,15 +20,18 @@ const Chain = () => {
   }
 
   //renders
-  const renderBlocks = () => {
+  const renderBlocks = useCallback(() => {
     return chain.map((block, index) => <div className="mb-4" key={block.id}><Block block={block} index={index}></Block></div>)
-  }
+  }, [chain])
+
+  // methods
+  const isValidChain = useCallback(() => ChainHelper.isValidChain(chain), [chain])
 
   return (
     <div>
       <div className="flex items-center mb-4">
         <h1 className="font-bold text-2xl mr-4">Blockchain</h1>
-        <ValidationTag valid={ChainHelper.isValidChain(chain)}/>
+        <ValidationTag valid={isValidChain()}/>
       </div>
       <div className="flex justify-between mb-4">
         <div>
