@@ -13,7 +13,7 @@ const CreateTransactions = () => {
   const [error, setError] = useState('')
   // redux
   const { wallets } = useSelector(state => state.wallets)
-  const { chain, pendingTransactions } = useSelector(state => state.blockchain)
+  const { chain, pendingTransactions, mining } = useSelector(state => state.blockchain)
   //handlers
   const handleInput = (setter, { target: { value }}) => {
     setter(value)
@@ -81,8 +81,8 @@ const CreateTransactions = () => {
           { error }
         </div>
         <button
-          disabled={!amount || from === '' || to === ''} 
-          onClick={handleAddTransaction} className="w-full py-1 px-4 rounded bg-gray-500 text-white focus:outline-none hover:bg-gray-600 disabled:bg-gray-200 disabled:cursor-not-allowed">Create Tx</button>
+          disabled={!amount || from === '' || to === '' || mining} 
+          onClick={handleAddTransaction} className="w-full py-1 px-4 rounded bg-gray-500 text-white focus:outline-none hover:bg-gray-600 disabled:bg-gray-200 disabled:cursor-not-allowed">{ mining ? 'Mining...' : 'Create Tx'}</button>
       </div>
     </div>
   )

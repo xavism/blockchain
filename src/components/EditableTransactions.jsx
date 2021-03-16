@@ -5,7 +5,6 @@ import { updateTransaction } from '../redux/blockchain/actions'
 import ColorHelper from '../helpers/color.helper'
 import TransactionHelper from '../helpers/transaction.helper'
 import ValidationTag from './ValidationTag'
-import { useCallback } from 'react'
 const EditableTransactions = ({transactions, blockIndex}) => {
   const ADDRESS_TYPE = {
     FROM: 'fromAddress',
@@ -33,7 +32,7 @@ const EditableTransactions = ({transactions, blockIndex}) => {
   //methods
   const getColor = (hash) => ColorHelper.intToRGB(hash.substring(0,10))
   // renders
-  const renderTransactions = useCallback(() => {
+  const renderTransactions = () => {
     return transactions.map((tx, i) => {
       const { fromAddress, toAddress, signature } = tx
       const hash = TransactionHelper.calculateHash(fromAddress ? fromAddress.publicKey : null, toAddress.publicKey, tx.amount)
@@ -71,7 +70,7 @@ const EditableTransactions = ({transactions, blockIndex}) => {
         </div>
       </div>)
     })
-  }, [transactions, selectOptions])
+  }
 
   return (
     <div className="">

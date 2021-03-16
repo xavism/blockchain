@@ -1,14 +1,15 @@
 import Wallet from './Wallet'
 import { useDispatch, useSelector } from "react-redux"
 import { createWallet } from "../redux/wallets/actions"
+import { useCallback } from 'react'
 const Wallets = () => {
   const dispatch = useDispatch()
   const { wallets } = useSelector(state => state.wallets)
   // renders
-  const renderWallets = () => {
+  const renderWallets = useCallback(() => {
     if (!wallets.length) return <p className="py-1">There are no wallets yet</p>
     return wallets.map(wallet => renderWalletPill(wallet))
-  }
+  }, [wallets])
 
   const renderWalletPill = (wallet) => {
     return (

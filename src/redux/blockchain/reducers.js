@@ -1,12 +1,13 @@
 import BlockHelper from "../../helpers/block.helper"
 import TransactionHelper from "../../helpers/transaction.helper"
-import { ADD_TRANSACTION, CHANGE_DIFFICULTY, CHANGE_REWARD, MINE, UPDATE_BLOCK, UPDATE_TX } from "./types"
+import { ADD_TRANSACTION, CHANGE_DIFFICULTY, CHANGE_REWARD, MINE, UPDATE_BLOCK, UPDATE_TX, SET_MINING } from "./types"
 const INITIAL_REWARD= 100
 const initialState = {
   chain: [BlockHelper.createGenesisBlock(INITIAL_REWARD)],
   difficulty: 2,
   pendingTransactions: [],
-  miningReward: INITIAL_REWARD
+  miningReward: INITIAL_REWARD,
+  mining: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -48,6 +49,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         pendingTransactions: [],
         chain: [...state.chain, action.payload]
+      }
+    case SET_MINING: 
+      return {
+        ...state,
+        mining: action.payload
       }
     case UPDATE_TX:
       chain = [...state.chain]
