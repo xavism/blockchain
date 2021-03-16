@@ -82,7 +82,7 @@ const CreateTransactions = () => {
         </div>
         <button
           disabled={!amount || from === '' || to === ''} 
-          onClick={handleAddTransaction} className="w-full py-1 px-4 rounded bg-gray-500 text-white focus:outline-none hover:bg-gray-600 disabled:bg-gray-200 disabled:cursor-not-allowed">Create</button>
+          onClick={handleAddTransaction} className="w-full py-1 px-4 rounded bg-gray-500 text-white focus:outline-none hover:bg-gray-600 disabled:bg-gray-200 disabled:cursor-not-allowed">Create Tx</button>
       </div>
     </div>
   )

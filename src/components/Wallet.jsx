@@ -16,7 +16,7 @@ const Wallet = ({ wallet, withAmount = false }) => {
         </div>
         { withAmount ?
           <div className="px-2 text-black bg-white rounded-r-md -m-1">
-            {ChainHelper.getBalanceOfAddress(chain, wallet.publicKey)}
+            {ChainHelper.getBalanceOfAddress(ChainHelper.getValidChain(chain), wallet.publicKey)}
           </div>
           :
           null

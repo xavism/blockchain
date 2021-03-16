@@ -32,7 +32,8 @@ const Chain = () => {
       <div className="flex justify-between mb-4">
         <div>
           <label className="mr-4"htmlFor="difficulty">Difficulty: </label>
-          <input className="border border-grey-100 pl-2 w-20" min="0" max="3"  value={difficulty} type="number" onChange={handleDifficulty}/>
+          <input className="border border-grey-100 pl-2 w-20" min="0"  value={difficulty} type="number" onChange={handleDifficulty}/>
+          {difficulty > 5 ? (<p className="text-sm text-red-500">A difficulty higher than 5 will take a long time to mine</p>) : null}
         </div>
         <div>
         <label className="mr-4" htmlFor="difficulty">Mining Reward: </label>

@@ -5,18 +5,18 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './redux'
 import { Provider } from 'react-redux'
-// import WorkerContext from './contexts/mine.worker'
-// const minerWorker = new Worker('/blockchain/mine.worker.js', { type: module })
+import WorkerContext from './contexts/mine.worker'
+const minerWorker = new Worker('/blockchain/mine.worker.js')
 
 
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <WorkerContext.Provider value={minerWorker}> */}
+    <WorkerContext.Provider value={minerWorker}>
       <Provider store={store}>
         <App />
       </Provider>
-    {/* </WorkerContext.Provider> */}
+    </WorkerContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

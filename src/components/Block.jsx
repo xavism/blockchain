@@ -5,6 +5,8 @@ import ValidationTag from './ValidationTag'
 import ColorHelper from "../helpers/color.helper"
 import BlockHelper from "../helpers/block.helper"
 import { useCallback } from "react"
+
+
 const Block = ({ index, block }) => {
   const { chain } = useSelector(state => state.blockchain)
   const { hash, nonce, previousHash, timestamp, transactions} = block
@@ -22,13 +24,13 @@ const Block = ({ index, block }) => {
         //hash: BlockHelper.calculateHash(newBlock.timestamp, newBlock.transactions, newBlock.previousHash, newBlock.nonce)
       }))
   }
-
   const parsedHash = useCallback(() => BlockHelper.calculateHash(timestamp, transactions, previousHash, nonce), [timestamp, transactions, previousHash, nonce])
   const blockColor = () => ColorHelper.intToRGB(parsedHash())
   //renders
   const renderBlock = () => {
     return (
-      <div>
+      <div style={{borderColor: blockColor()}} className="rounded bg-gray-100 shadow p-2 border-t-8 md:border-0">
+        <div className="uppercase font-bold mb-2 text-lg md:hidden">{index === 0 ? 'Genesis Block' : `Block ${index}`}</div>
         <div className="flex mb-2 rounded justify-between">
           <p className="max-w-xs whitespace-nowrap overflow-hidden overflow-ellipsis">
             <span className="mr-2 font-bold">Current Hash: </span>
@@ -42,10 +44,6 @@ const Block = ({ index, block }) => {
           <label className="mr-2 font-bold" htmlFor="nonce">Hash</label>
           <input className="flex-1 pl-2" value={hash} onChange={(e) => handleInput('hash', e)} type="text"/>
         </div>
-        <div className="flex mb-2">
-          <label className="mr-2 font-bold" htmlFor="nonce">Nonce</label>
-          <input className="flex-1 pl-2" value={nonce} onChange={(e) => handleInput('nonce', e, true)} type="number" min="0"/>
-        </div>
         { previousHash ?
         <div className="flex mb-2 items-center">
           <label className="font-bold" htmlFor="previousHash">Previous hash</label>
@@ -54,7 +52,11 @@ const Block = ({ index, block }) => {
         </div>
         : null
         }
-        <div className="flex">
+        <div className="flex mb-2">
+          <label className="mr-2 font-bold" htmlFor="nonce">Nonce</label>
+          <input className="flex-1 pl-2" value={nonce} onChange={(e) => handleInput('nonce', e, true)} type="number" min="0"/>
+        </div>
+        <div className="flex mb-2">
           <label className="mr-2 font-bold" htmlFor="hash">Timestamp</label>
           <input className="flex-1 pl-2" value={ timestamp } onChange={(e) => handleInput('timestamp', e)} type="date"/>
         </div>
@@ -72,10 +74,10 @@ const Block = ({ index, block }) => {
 
   return (
     <div className="flex">
-      <div style={{borderColor: blockColor()}} className={`border-l-8 w-10 rounded shadow px-2 py-4 mr-4 ${BlockHelper.isValid(block, chain, index) ? 'bg-gray-200' : 'bg-red-500 text-white'}`}>
+      <div style={{borderColor: blockColor()}} className={`border-l-8 w-10 rounded shadow px-2 py-4 mr-4 hidden md:block ${BlockHelper.isValid(block, chain, index) ? 'bg-gray-200' : 'bg-red-500 text-white'}`}>
         <p className="font-bold ml-5 uppercase transform origin-top-left rotate-90 absolute">{index === 0 ? 'Genesis Block' : `Block ${index}`}</p>
       </div>
-      <div className="rounded bg-gray-100 shadow px-2 py-4 flex-1">
+      <div className="flex-1">
         { renderBlock() }
       </div>
     </div>

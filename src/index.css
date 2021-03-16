@@ -3,5 +3,9 @@
 @tailwind utilities;
 
 input, select {
-  @apply pl-2 border border-blue-300 rounded-xl focus:outline-none
+  @apply pl-1 md:pl-2 border border-blue-300 rounded focus:outline-none
+}
+
+.right-col {
+  grid-template-rows: min-content;
 }
